@@ -151,7 +151,6 @@ public class PathExpressionComputer<N, V> {
         }
       }
     }
-    System.out.println();
   }
 
 
