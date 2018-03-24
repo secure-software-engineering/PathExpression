@@ -20,7 +20,7 @@ import pathexpression.PathExpressionComputer;
 import pathexpression.RegEx;
 
 
-public class PathExpressionTests {
+public class PathExpressionTest {
    @Test
    public void simple() {
    IntGraph g = new IntGraph();
