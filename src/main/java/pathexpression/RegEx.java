@@ -194,6 +194,25 @@ public class RegEx<V> implements IRegEx<V> {
     return simplify(new Concatenate<V>(a, b));
   }
 
+  public static <V> IRegEx<V> reverse(IRegEx<V> a) {
+    assert a != null;
+    if(a instanceof EmptySet || a instanceof Epsilon || a instanceof Plain)
+    		return a;
+    if(a instanceof Concatenate) {
+    		Concatenate concatenate = (Concatenate) a;
+		return concatenate(reverse(concatenate.getSecond()), reverse(concatenate.getFirst()));
+    }
+    if(a instanceof Union) {
+    		Union union = (Union) a;
+    		return union(reverse(union.getFirst()), reverse(union.getSecond()));
+    }
+    if(a instanceof Star) {
+    		Star star = (Star) a;
+		return star(reverse(star.getPlain()));
+    }
+    throw new IllegalStateException("Cannot reverse this regular expression: " + a);
+  }
+
   public static <V> boolean containsEpsilon(IRegEx<V> regex) {
     if (regex instanceof Union) {
       Union con = (Union) regex;
@@ -298,6 +317,7 @@ public class RegEx<V> implements IRegEx<V> {
       return obj instanceof EmptySet;
     }
   }
+
 
 
 
