@@ -18,6 +18,7 @@ import com.google.common.collect.HashBiMap;
 import com.google.common.collect.Table;
 import pathexpression.RegEx.EmptySet;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -72,7 +73,7 @@ public class PathExpressionComputer<N, V> {
     eliminate();
     logger.debug("Compute all path from {}", a);
     List<PathExpression<V>> extractPathSequence = extractPathSequence();
-    List<IRegEx<V>> regEx = new LinkedList<>();
+    List<IRegEx<V>> regEx = new ArrayList<>();
     for (int i = 0; i < graph.getNodes().size(); i++) {
       regEx.add(emptyRegEx);
     }
@@ -104,10 +105,8 @@ public class PathExpressionComputer<N, V> {
   }
 
   private List<PathExpression<V>> extractPathSequence() {
-
-	
     int n = graph.getNodes().size();
-    List<PathExpression<V>> list = new LinkedList<PathExpression<V>>();
+    List<PathExpression<V>> list = new ArrayList<PathExpression<V>>();
     for (int u = 1; u <= n; u++) {
       for (int w = u; w <= n; w++) {
         IRegEx<V> reg = table.get(u, w);
