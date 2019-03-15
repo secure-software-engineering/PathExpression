@@ -12,9 +12,7 @@
 
 package pathexpression;
 
-import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBasedTable;
-import com.google.common.collect.HashBiMap;
 import com.google.common.collect.Table;
 import pathexpression.RegEx.EmptySet;
 
@@ -32,7 +30,7 @@ public class PathExpressionComputer<N, V> {
   final static Logger logger = LogManager.getLogger(PathExpressionComputer.class);
 
   private LabeledGraph<N, V> graph;
-  private BiMap<N, Integer> nodeToIntMap = HashBiMap.create();
+  private Map<N, Integer> nodeToIntMap = new HashMap<>();
   private Table<Integer, Integer, IRegEx<V>> table = HashBasedTable.create();
   private IRegEx<V> emptyRegEx = new RegEx.EmptySet<V>();
   private Map<N,List<IRegEx<V>>> allPathFromNode = new HashMap<>();
@@ -47,7 +45,7 @@ public class PathExpressionComputer<N, V> {
   private void initNodesToIntMap() {
     int size = nodeToIntMap.size();
     for (N node : graph.getNodes()) {
-      nodeToIntMap.put(node, (++size));
+      nodeToIntMap.put(node, ++size);
     }
   }
 
@@ -69,7 +67,7 @@ public class PathExpressionComputer<N, V> {
     if(allPathFromNode.get(a) != null) {
     		return allPathFromNode.get(a);
     }
-    
+
     eliminate();
     logger.debug("Compute all path from {}", a);
     List<PathExpression<V>> extractPathSequence = extractPathSequence();
