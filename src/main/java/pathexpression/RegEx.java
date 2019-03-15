@@ -238,6 +238,8 @@ public class RegEx<V> implements IRegEx<V> {
         return u.getFirst();
       if (u.getFirst().equals(u.getSecond()))
         return u.getFirst();
+      // TODO this is neither part of Tarjan's regex simplification operator [ ]
+      //      nor correct. (a U ε) = (ε U a) ≠ a  // with a∊Σ
       if(u.getFirst() instanceof Epsilon)
         return u.getSecond();
       if(u.getSecond() instanceof Epsilon)

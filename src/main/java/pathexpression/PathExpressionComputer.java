@@ -133,6 +133,8 @@ public class PathExpressionComputer<N, V> {
     for (int v = 1; v <= numberOfNodes; v++) {
       for (int w = 1; w <= numberOfNodes; w++) {
         if (v == w) {
+          // This is different from Tarjan's ELIMINATE
+          // but doesn't seem to fix the problem when removed
           updateTable(v, w, new Epsilon());
         } else {
           updateTable(v, w, emptyRegEx);

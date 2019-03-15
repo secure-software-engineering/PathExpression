@@ -225,6 +225,10 @@ public class PathExpressionTest {
     g.addEdge(4, "41", 1);
     PathExpressionComputer<Integer, String> expr = new PathExpressionComputer<Integer, String>(g);
     IRegEx<String> expressionBetween = expr.getExpressionBetween(1, 1);
+    // TODO expected regex not correct.
+    // Empty word ε should be accepted by path expression from 1 to 1.
+    // Currently        12·23·(32·23)*·34·[41·12·23·(32·23)*·34]*·41
+    // Should be  EPS U 12·23·(32·23)*·34·[41·12·23·(32·23)*·34]*·41
     IRegEx<String> expected = a(a(a(a(a("12", "23"), star(a("32", "23"))), "34"), star(a(a(a(a("41", "12"), "23"), star(a("32", "23"))), "34"))), "41");
     assertEquals(expected, expressionBetween);
   }
@@ -238,6 +242,10 @@ public class PathExpressionTest {
     g.addEdge(4, "41", 1);
     PathExpressionComputer<Integer, String> expr = new PathExpressionComputer<Integer, String>(g);
     IRegEx<String> expressionBetween = expr.getExpressionBetween(1, 1);
+    // TODO expected regex not correct.
+    // Empty word ε should be accepted by path expression from 1 to 1.
+    // Currently        13·(31·13)*·34·[41·13·(31·13)*·34]*·41 U ...
+    // Should be  EPS U 13·(31·13)*·34·[41·13·(31·13)*·34]*·41 U ...
     IRegEx<String> expected = u(a(a(a(a("13", star(a("31", "13"))), "34"), star(a(a(a("41", "13"), star(a("31", "13"))), "34"))), "41"), a(u(a("13", star(a("31", "13"))), a(a(a(a("13", star(a("31", "13"))), "34"), star(a(a(a("41", "13"), star(a("31", "13"))), "34"))), a(a("41", "13"), star(a("31", "13"))))), "31"));
     assertEquals(expected, expressionBetween);
   }
