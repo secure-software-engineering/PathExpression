@@ -130,15 +130,12 @@ public class PathExpressionComputer<N, V> {
 	}
 	logger.debug("Start eliminating");
     int numberOfNodes = graph.getNodes().size();
+    // TODO eliminate this n^2 loop by using default value emptyRegEx
+    // Create a new method returning default value when table entry doesn't exist
+    // and use that method instead of table.get(...).
     for (int v = 1; v <= numberOfNodes; v++) {
       for (int w = 1; w <= numberOfNodes; w++) {
-        if (v == w) {
-          // This is different from Tarjan's ELIMINATE
-          // but doesn't seem to fix the problem when removed
-          updateTable(v, w, new Epsilon());
-        } else {
-          updateTable(v, w, emptyRegEx);
-        }
+        updateTable(v, w, emptyRegEx);
       }
     }
     for (Edge<N, V> e : graph.getEdges()) {

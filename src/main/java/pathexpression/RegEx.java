@@ -238,12 +238,6 @@ public class RegEx<V> implements IRegEx<V> {
         return u.getFirst();
       if (u.getFirst().equals(u.getSecond()))
         return u.getFirst();
-      // TODO this is neither part of Tarjan's regex simplification operator [ ]
-      //      nor correct. (a U ε) = (ε U a) ≠ a  // with a∊Σ
-      if(u.getFirst() instanceof Epsilon)
-        return u.getSecond();
-      if(u.getSecond() instanceof Epsilon)
-        return u.getFirst();
     }
     if (in instanceof Concatenate) {
       Concatenate<V> c = (Concatenate<V>) in;
@@ -260,12 +254,11 @@ public class RegEx<V> implements IRegEx<V> {
     }
 
     if (in instanceof Star) {
-      Star<V> star = (Star<V>) in;
-      if (star.getPlain() instanceof EmptySet) {
-        return star.getPlain();
-      }
-      if (star.getPlain() instanceof Epsilon)
-        return star.getPlain();
+      IRegEx<V> starPlain = ((Star<V>) in).getPlain();
+      if (starPlain instanceof EmptySet)
+        return new Epsilon<V>();
+      if (starPlain instanceof Epsilon)
+        return starPlain;
     }
 
     return in;
@@ -312,6 +305,11 @@ public class RegEx<V> implements IRegEx<V> {
   public static class EmptySet<V> implements IRegEx<V> {
     public String toString() {
       return "EMPTY";
+    }
+
+    @Override
+    public int hashCode() {
+      return 987656707;
     }
 
     @Override
