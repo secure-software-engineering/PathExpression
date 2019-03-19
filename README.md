@@ -1,4 +1,6 @@
-[![Run Status](https://api.shippable.com/projects/5ab50d83806e27070049c7a1/badge?branch=master)](https://app.shippable.com/github/johspaeth/PathExpression)
+**This is a copy of [johspaeth/PathExpression](https://github.com/johspaeth/PathExpression)
+created solely for
+[this pull request](https://github.com/johspaeth/PathExpression/pull/3).**
 
 # Path Expression
 
