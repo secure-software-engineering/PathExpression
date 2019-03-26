@@ -1,7 +1,3 @@
-**This is a copy of [johspaeth/PathExpression](https://github.com/johspaeth/PathExpression)
-created solely for
-[this pull request](https://github.com/johspaeth/PathExpression/pull/3).**
-
 # Path Expression
 
 This repository contains an implementation of an algorithm by Tarjan that computes path expressions
