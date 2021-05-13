@@ -16,11 +16,13 @@ jobs:
     - name: Build with Maven
       run: mvn -B verify --file pom.xml -P ci
 
-
   Release:
     name: Release
     if: github.ref == 'refs/heads/master'
     runs-on: ubuntu-latest
+    permissions: 
+      contents: read
+      packages: write 
     needs: [BuildAndTest]
     steps:
       - name: Checkout
@@ -32,21 +34,8 @@ jobs:
       - name: Release
         uses: qcastel/github-actions-maven-release@master
         env:
-          GPG_TTY: "$(tty)"
           JAVA_HOME: /usr/lib/jvm/java-1.8-openjdk/
         with:
           release-branch-name: "master"
-          
-          gpg-enabled: "true"
-          gpg-key-id: ${{ secrets.GPG_KEY_ID }}
-          gpg-key: ${{ secrets.GPG_KEY }}
-          
-          maven-repo-server-id: github
-          maven-repo-server-username: ${{ secrets.CI_USER }}
-          maven-repo-server-password: ${{ secrets.CI_PACKAGES_TOKEN }}
-
-          git-release-bot-name:  ${{ secrets.CI_USER }}
-          git-release-bot-email: "admin@codeshield.de"
-
           access-token: ${{ secrets.GITHUB_TOKEN }}
           maven-args: "-DskipTests -P ci"
