@@ -14,7 +14,7 @@ jobs:
       with:
         java-version: 1.8
     - name: Build with Maven
-      run: mvn -B verify --file pom.xml -P ci
+      run: mvn -B verify --file pom.xml
 
   Release:
     name: Release
@@ -50,4 +50,4 @@ jobs:
           git-release-bot-email: "admin@codeshield.de"
 
           access-token: ${{ secrets.GITHUB_TOKEN }}
-          maven-args: "-DskipTests -P ci"
+          maven-args: "-DskipTests"
