@@ -17,6 +17,7 @@
         <url>git@github.com:johspaeth/PathExpression.git</url>
         <tag>${project.version}</tag>
     </scm>
+	<name>Tarjan's Path Expression Implementation for Java</name>
 	<description>Implementation of an algorithm by Tarjan that efficiently computes path expressions based on a labeled graph</description>
 	<url>https://github.com/johspaeth/PathExpression</url>
 
