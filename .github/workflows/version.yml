@@ -23,7 +23,7 @@ jobs:
         with:
           distribution: 'adopt'
           java-package: jdk
-          java-version: '1.8'
+          java-version: '8'
       # Semantic versioning
       - name: Semantic versioning
         id: versioning
