@@ -2,7 +2,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>de.fraunhofer.iem</groupId>
 	<artifactId>pathexpression</artifactId>
-	<version>1.0.1</version>
+	<version>1.0.2</version>
 
 	<licenses>
 		<license>
@@ -17,6 +17,7 @@
         <url>git@github.com:johspaeth/PathExpression.git</url>
         <tag>${project.version}</tag>
     </scm>
+	<name>Tarjan's Path Expression Implementation for Java</name>
 	<description>Implementation of an algorithm by Tarjan that efficiently computes path expressions based on a labeled graph</description>
 	<url>https://github.com/johspaeth/PathExpression</url>
 
@@ -53,6 +54,19 @@
 						<executions>
 							<execution>
 								<id>attach-source</id>
+								<goals>
+									<goal>jar</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-javadoc-plugin</artifactId>
+						<version>3.6.0</version>
+						<executions>
+							<execution>
+								<id>attach-javadoc</id>
 								<goals>
 									<goal>jar</goal>
 								</goals>
