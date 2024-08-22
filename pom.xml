@@ -12,22 +12,26 @@
 	</licenses>
 
     <scm>
-        <connection>scm:git:${project.scm.url}</connection>
-        <developerConnection>scm:git:${project.scm.url}</developerConnection>
-        <url>git@github.com:johspaeth/PathExpression.git</url>
-        <tag>${project.version}</tag>
+        <connection>scm:git:git@github.com:secure-software-engineering/PathExpression.git</connection>
+        <developerConnection>scm:git:ssh://github.com:secure-software-engineering/PathExpression.git</developerConnection>
+        <url>https://github.com/secure-software-engineering/PathExpression</url>
     </scm>
 	<name>Tarjan's Path Expression Implementation for Java</name>
 	<description>Implementation of an algorithm by Tarjan that efficiently computes path expressions based on a labeled graph</description>
-	<url>https://github.com/johspaeth/PathExpression</url>
-
-	<developers>
-		<developer>
-			<name>Johannes Spaeth</name>
-			<email>mail@johspaeth.de</email>
-		</developer>
-	</developers>
-
+    <developers>
+        <developer>
+            <name>Boomerang development team</name>
+            <email>boomerang@eim.upb.de</email>
+            <organization>Research Group Secure Software Engineering</organization>
+            <organizationUrl>https://www.hni.uni-paderborn.de/sse</organizationUrl>
+        </developer>
+    </developers>
+    <contributors>
+        <contributor>
+            <name>Johannes Spaeth</name>
+            <email>mail@johspaeth.de</email>
+        </contributor>
+    </contributors>
 	<profiles>
 		<!-- This profile is used to avoid running the deployment in non-deployment
 			contexts because they require specific keys from the Github remote. Include
