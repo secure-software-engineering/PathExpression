@@ -19,7 +19,7 @@
 
     <name>Tarjan's Path Expression Implementation for Java</name>
     <description>Implementation of an algorithm by Tarjan that efficiently computes path expressions based on a labeled graph</description>
-    <url>https://github.com/johspaeth/PathExpression</url>
+    <url>https://github.com/secure-software-engineering/PathExpression</url>
 
     <developers>
         <developer>
