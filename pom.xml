@@ -1,23 +1,26 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-	<modelVersion>4.0.0</modelVersion>
-	<groupId>de.fraunhofer.iem</groupId>
-	<artifactId>pathexpression</artifactId>
-	<version>1.0.3</version>
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>de.fraunhofer.iem</groupId>
+    <artifactId>pathexpression</artifactId>
+    <version>1.0.3</version>
 
-	<licenses>
-		<license>
-			<name>Eclipse Public License - v2.0</name>
-			<url>https://www.eclipse.org/legal/epl-2.0/</url>
-		</license>
-	</licenses>
+   <licenses>
+        <license>
+            <name>Eclipse Public License - v2.0</name>
+            <url>https://www.eclipse.org/legal/epl-2.0/</url>
+        </license>
+    </licenses>
 
     <scm>
         <connection>scm:git:git@github.com:secure-software-engineering/PathExpression.git</connection>
         <developerConnection>scm:git:ssh://github.com:secure-software-engineering/PathExpression.git</developerConnection>
         <url>https://github.com/secure-software-engineering/PathExpression</url>
     </scm>
-	<name>Tarjan's Path Expression Implementation for Java</name>
-	<description>Implementation of an algorithm by Tarjan that efficiently computes path expressions based on a labeled graph</description>
+
+    <name>Tarjan's Path Expression Implementation for Java</name>
+    <description>Implementation of an algorithm by Tarjan that efficiently computes path expressions based on a labeled graph</description>
+    <url>https://github.com/johspaeth/PathExpression</url>
+
     <developers>
         <developer>
             <name>Boomerang development team</name>
@@ -32,6 +35,7 @@
             <email>mail@johspaeth.de</email>
         </contributor>
     </contributors>
+
 	<profiles>
 		<!-- This profile is used to avoid running the deployment in non-deployment
 			contexts because they require specific keys from the Github remote. Include
