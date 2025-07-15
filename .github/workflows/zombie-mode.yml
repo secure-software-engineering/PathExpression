@@ -1,0 +1,46 @@
+name: Zombie Mode
+on:
+  pull_request:
+    types: [opened]
+    branches: [develop]
+  schedule:
+    - cron: '0 9 * * MON'
+  workflow_dispatch:
+
+jobs:
+  auto-approve-dependabot:
+    if: github.actor == 'dependabot[bot]'
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+    steps:
+      - uses: secure-software-engineering/actions/dependabot/auto-approve-action.yml@develop
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+  zombie-release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - uses: secure-software-engineering/actions/zombie-mode/zombie-mode.yml@develop
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          base-branch: 'develop'
+          auto-merge-days: '3'
+          version-file: 'pom.xml'
+
+  auto-merge-aged:
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+      contents: write
+    steps:
+      - uses: secure-software-engineering/actions/zombie-mode/auto-merge-zombie-prs.yml@develop
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          age-days: '3'
+          merge-method: 'squash'
+          delete-branch: 'true'
+          zombie-label: 'zombie-mode'
