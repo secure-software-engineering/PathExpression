@@ -13,7 +13,7 @@ jobs:
       contents: write
       pull-requests: write
     steps:
-      - uses: secure-software-engineering/actions/version/version.yml@develop
+      - uses: secure-software-engineering/actions/version@develop
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           java_version: '11'

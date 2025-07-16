@@ -14,7 +14,7 @@ jobs:
     permissions:
       pull-requests: write
     steps:
-      - uses: secure-software-engineering/actions/dependabot/auto-approve-action.yml@develop
+      - uses: secure-software-engineering/actions/dependabot@develop
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
 
@@ -24,7 +24,7 @@ jobs:
       contents: write
       pull-requests: write
     steps:
-      - uses: secure-software-engineering/actions/zombie-mode/zombie-mode.yml@develop
+      - uses: secure-software-engineering/actions/zombie-mode@develop
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           base-branch: 'develop'
@@ -37,7 +37,7 @@ jobs:
       pull-requests: write
       contents: write
     steps:
-      - uses: secure-software-engineering/actions/zombie-mode/auto-merge-zombie-prs.yml@develop
+      - uses: secure-software-engineering/actions/zombie-mode/zombie-prs-merge@develop
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           age-days: '3'
