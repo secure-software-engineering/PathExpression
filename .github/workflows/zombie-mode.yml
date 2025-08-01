@@ -4,7 +4,7 @@ on:
     types: [opened]
     branches: [develop]
   schedule:
-    - cron: '0 9 * * MON'
+    - cron: '0 6 * * MON'
   workflow_dispatch:
 
 jobs:
@@ -24,7 +24,7 @@ jobs:
       contents: write
       pull-requests: write
     steps:
-      - uses: secure-software-engineering/actions/zombie-mode@develop
+      - uses: secure-software-engineering/actions/zombie-mode/prepare-pr@develop
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           base-branch: 'develop'
@@ -37,7 +37,7 @@ jobs:
       pull-requests: write
       contents: write
     steps:
-      - uses: secure-software-engineering/actions/zombie-mode/zombie-prs-merge@develop
+      - uses: secure-software-engineering/actions/zombie-mode/merge-pr@develop
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           age-days: '3'
