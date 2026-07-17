@@ -9,7 +9,7 @@ on:
 
 jobs:
   publish:
-    uses: secure-software-engineering/actions/release/maven-release-publish/action.yml@develop
+    uses: secure-software-engineering/actions/.github/workflows/maven-release-publish.yml@develop
     with:
       head_branch: develop
       java_version: '11'
