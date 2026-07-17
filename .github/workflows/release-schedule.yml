@@ -2,148 +2,15 @@ name: Release Schedule
 
 on:
   schedule:
-    # Daily: check-changes opens a release PR once unreleased develop commits
-    # are old enough; auto-merge-stale-release-pr merges any open release PR
-    # that's aged out. Each job's own logic decides whether to act.
-    - cron: '0 7 * * *'
+    - cron: '0 9 * * *'
 
 jobs:
-  check-changes:
-    runs-on: ubuntu-latest
-    outputs:
-      should_release: ${{ steps.check.outputs.should_release }}
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-      - name: Check for unreleased changes and open release PR
-        id: check
-        env:
-          GH_TOKEN: ${{ secrets.AUTO_MERGE_PAT }}
-          RELEASE_READY_AGE_DAYS: '14'
-        run: |
-          latest_tag=$(git tag -l | grep -E '^[0-9]+\.[0-9]+\.[0-9]+$' | sort -V | tail -1)
-          if [ -z "$latest_tag" ]; then
-            echo "No release tag found, skipping automated safety check." >&2
-            echo "should_release=true" >> "$GITHUB_OUTPUT"
-            exit 0
-          fi
-
-          unreleased=$(git rev-list "${latest_tag}..origin/develop" --count)
-          if [ "$unreleased" -eq 0 ]; then
-            echo "No commits on develop since ${latest_tag}, skipping."
-            echo "should_release=false" >> "$GITHUB_OUTPUT"
-            exit 0
-          fi
-
-          # Oldest unreleased commit must itself be past the age threshold -
-          # this debounces the release so it doesn't fire on every small
-          # change, only once something has been sitting unreleased a while.
-          oldest_epoch=$(git log --reverse --format=%ct "${latest_tag}..origin/develop" | head -1)
-          age_days=$(( ( $(date -u +%s) - oldest_epoch ) / 86400 ))
-          if [ "$age_days" -lt "$RELEASE_READY_AGE_DAYS" ]; then
-            echo "Oldest unreleased commit is only $age_days day(s) old, not yet ${RELEASE_READY_AGE_DAYS}. Skipping."
-            echo "should_release=false" >> "$GITHUB_OUTPUT"
-            exit 0
-          fi
-
-          bot_login=$(gh api user --jq '.login')
-          open_release_prs=$(gh pr list --base develop --state open --json number,author,headRefName \
-            --jq --arg bot "$bot_login" \
-              '[.[] | select(.author.login == $bot and (.headRefName | startswith("release/prep-")))] | length')
-          if [ "$open_release_prs" -gt 0 ]; then
-            echo "A release PR opened by $bot_login is already open against develop, skipping."
-            echo "should_release=false" >> "$GITHUB_OUTPUT"
-            exit 0
-          fi
-
-          echo "should_release=true" >> "$GITHUB_OUTPUT"
-
-  prepare-release:
-    needs: check-changes
-    if: needs.check-changes.outputs.should_release == 'true'
-    uses: secure-software-engineering/actions/.github/workflows/maven-release-prepare.yml@develop
+  schedule:
+    uses: secure-software-engineering/actions/.github/workflows/maven-release-schedule.yml@develop
     with:
-      release_type: patch
       head_branch: develop
       java_version: '11'
+      release_ready_age_days: '14'
+      stale_pr_age_days: '7'
     secrets:
       release_pat: ${{ secrets.AUTO_MERGE_PAT }}
-
-  auto-merge-stale-release-pr:
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      pull-requests: read
-    env:
-      GH_TOKEN: ${{ secrets.AUTO_MERGE_PAT }}
-      AGE_DAYS: '7'
-    steps:
-      - name: Find and merge stale release PRs
-        run: |
-          now=$(date -u +%s)
-          age_seconds=$(( AGE_DAYS * 86400 ))
-
-          bot_login=$(gh api user --jq '.login')
-
-          release_prs=$(gh pr list --repo "$GITHUB_REPOSITORY" --base develop --state open \
-            --json number,title,createdAt,author,isDraft,headRefName \
-            --jq --arg bot "$bot_login" \
-              '[.[] | select(.author.login == $bot and .isDraft == false
-                and (.headRefName | startswith("release/prep-")))]')
-
-          echo "$release_prs" | jq -c '.[]' | while read -r pr; do
-            number=$(echo "$pr" | jq -r '.number')
-            created_at=$(echo "$pr" | jq -r '.createdAt')
-            created_epoch=$(date -u -d "$created_at" +%s)
-            age=$(( now - created_epoch ))
-
-            if [ "$age" -lt "$age_seconds" ]; then
-              echo "PR #$number is $((age / 86400)) day(s) old, not yet stale. Skipping."
-              continue
-            fi
-
-            echo "PR #$number is $((age / 86400)) day(s) old, updating and merging."
-
-            if ! gh api -X PUT "repos/$GITHUB_REPOSITORY/pulls/$number/update-branch" >/dev/null 2>update_err.log; then
-              if grep -q "already up to date\|422" update_err.log; then
-                echo "PR #$number already up to date with develop."
-              else
-                echo "Could not update PR #$number branch, skipping:"
-                cat update_err.log
-                continue
-              fi
-            fi
-
-            # Give GitHub a moment to compute state after the update, and
-            # re-check draft status right before merging in case it changed
-            # while this PR was waiting to become stale.
-            mergeable_state=""
-            is_draft="false"
-            for attempt in 1 2 3 4 5; do
-              sleep 5
-              state_json=$(gh pr view "$number" --repo "$GITHUB_REPOSITORY" --json mergeStateStatus,isDraft)
-              mergeable_state=$(echo "$state_json" | jq -r '.mergeStateStatus')
-              is_draft=$(echo "$state_json" | jq -r '.isDraft')
-              if [ "$mergeable_state" != "UNKNOWN" ]; then
-                break
-              fi
-            done
-
-            if [ "$is_draft" = "true" ]; then
-              echo "PR #$number was converted to a draft, skipping."
-              continue
-            fi
-
-            if [ "$mergeable_state" = "DIRTY" ] || [ "$mergeable_state" = "CONFLICTING" ]; then
-              echo "PR #$number has real merge conflicts with develop, leaving open for manual resolution."
-              continue
-            fi
-
-            if ! gh pr merge "$number" --repo "$GITHUB_REPOSITORY" --merge; then
-              echo "PR #$number could not be merged yet (likely pending required checks/reviews). Will retry on the next scheduled run."
-              continue
-            fi
-
-            echo "PR #$number merged."
-          done
