@@ -1,0 +1,13 @@
+name: Sync release version with PR title
+
+on:
+  pull_request:
+    types: [edited, synchronize]
+
+jobs:
+  sync:
+    uses: secure-software-engineering/actions/release/maven-release-title-sync/action.yml@develop
+    with:
+      java_version: '11'
+    secrets:
+      release_pat: ${{ secrets.AUTO_MERGE_PAT }}
