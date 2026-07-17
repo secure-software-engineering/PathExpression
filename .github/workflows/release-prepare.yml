@@ -12,7 +12,7 @@ on:
 
 jobs:
   prepare-release:
-    uses: secure-software-engineering/actions/release/maven-release-prepare/action.yml@develop
+    uses: secure-software-engineering/actions/.github/workflows/maven-release-prepare.yml@develop
     with:
       release_type: ${{ inputs.release_type }}
       head_branch: develop

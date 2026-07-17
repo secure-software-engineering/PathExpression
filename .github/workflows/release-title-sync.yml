@@ -6,7 +6,7 @@ on:
 
 jobs:
   sync:
-    uses: secure-software-engineering/actions/release/maven-release-title-sync/action.yml@develop
+    uses: secure-software-engineering/actions/.github/workflows/maven-release-title-sync.yml@develop
     with:
       java_version: '11'
     secrets:
